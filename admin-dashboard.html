@@ -60,7 +60,7 @@
                 productos.forEach(producto => {
                     const div = document.createElement('div');
                     div.className = 'product-card';
-                    div.innerHTML = 
+                    div.innerHTML = `
                         <img src="${producto.imagen}" alt="${producto.nombre}">
                         <div class="product-name">${producto.nombre}</div>
                         <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
@@ -68,7 +68,7 @@
                             <input type="number" id="nuevoStock-${producto.id}" placeholder="Nuevo stock" />
                             <button onclick="actualizarStock(${producto.id})">Actualizar</button>
                         </div>
-                    ;
+                    `;
                     contenedor.appendChild(div);
                 });
             } catch (error) {
@@ -77,7 +77,7 @@
         }
 
         async function actualizarStock(id) {
-            const nuevoStock = document.getElementById(nuevoStock-${id}).value;
+            const nuevoStock = document.getElementById(`nuevoStock-${id}`).value;
 
             if (nuevoStock === '') {
                 alert("Por favor ingrese un nuevo stock");
@@ -94,7 +94,7 @@
                 const resultado = await response.json();
 
                 if (response.ok) {
-                    document.getElementById(stock-${id}).innerText = resultado.producto.stock;
+                    document.getElementById(`stock-${id}`).innerText = resultado.producto.stock;
                     alert("Stock actualizado correctamente");
                 } else {
                     alert(resultado.mensaje);

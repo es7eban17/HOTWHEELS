@@ -71,6 +71,7 @@ let productos = [
   { id: 53, nombre: "Producto 52", stock: 8, imagen: "https://via.placeholder.com/200?text=Producto+2" },
   { id: 54, nombre: "Producto 53", stock: 8, imagen: "https://via.placeholder.com/200?text=Producto+2" },
   { id: 55, nombre: "Producto 54", stock: 8, imagen: "https://via.placeholder.com/200?text=Producto+2" }
+
 ];
 
 // Usuario y contraseña (en un entorno real, esto debería estar en una base de datos)

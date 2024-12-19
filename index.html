@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración</title>
+    <title>Catálogo de Vehículos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,77 +42,115 @@
             color: #555;
             font-size: 16px;
         }
+        .hidden-button {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .login-form {
+            display: none;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .hidden-area {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0); /* Invisible area */
+        }
     </style>
 </head>
 <body>
-    <h1>Panel de Administración</h1>
+    <h1>CATÁLOGO DE VEHÍCULOS</h1>
+    <div class="hidden-area" onclick="mostrarBoton()"></div>
+    <button class="hidden-button" id="loginButton" onclick="mostrarLogin()">Iniciar Sesión</button>
+    <div class="login-form" id="loginForm">
+        <input type="text" id="username" placeholder="Usuario" />
+        <input type="password" id="password" placeholder="Contraseña" />
+        <button onclick="login()">Iniciar Sesión</button>
+    </div>
     <div class="product-grid" id="productos"></div>
 
     <script>
-        // Aquí se mantiene un stock de productos predefinidos (esto puede ser cargado desde un archivo estático JSON)
-        const productos = [
-            {
-                id: 1,
-                nombre: "Vehículo A",
-                stock: 100,
-                imagen: "https://example.com/vehiculo-a.jpg"
-            },
-            {
-                id: 2,
-                nombre: "Vehículo B",
-                stock: 50,
-                imagen: "https://example.com/vehiculo-b.jpg"
-            }
-            // Agrega más productos si es necesario
-        ];
-
-        function cargarProductos() {
-            const contenedor = document.getElementById('productos');
-            contenedor.innerHTML = '';
-
-            productos.forEach(producto => {
-                const div = document.createElement('div');
-                div.className = 'product-card';
-                div.innerHTML = `
-                    <img src="${producto.imagen}" alt="${producto.nombre}">
-                    <div class="product-name">${producto.nombre}</div>
-                    <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
-                    <div class="update-section">
-                        <input type="number" id="nuevoStock-${producto.id}" placeholder="Nuevo stock" />
-                        <button onclick="actualizarStock(${producto.id})">Actualizar</button>
-                    </div>
-                `;
-                contenedor.appendChild(div);
-            });
+        function mostrarBoton() {
+            document.getElementById('loginButton').style.display = 'block';
         }
 
-        // Función para actualizar el stock solo si el servidor está disponible
-        async function actualizarStock(id) {
-            const nuevoStock = document.getElementById(`nuevoStock-${id}`).value;
+        function mostrarLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+        }
 
-            if (nuevoStock === '') {
-                alert("Por favor ingrese un nuevo stock");
-                return;
-            }
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('https://hotwheels2.vercel.app/api/productos/actualizar', {  // Reemplaza esta URL con la que corresponde a tu backend si está disponible
+                const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, nuevoStock: parseInt(nuevoStock) })
+                    body: JSON.stringify({ username, password })
                 });
 
                 const resultado = await response.json();
 
                 if (response.ok) {
-                    document.getElementById(`stock-${id}`).innerText = resultado.producto.stock;
-                    alert("Stock actualizado correctamente");
+                    alert("Inicio de sesión exitoso");
+                    window.location.href = '/admin-dashboard';
                 } else {
                     alert(resultado.mensaje);
                 }
             } catch (error) {
-                console.error("Error al actualizar stock:", error);
-                alert("El servidor no está disponible. Solo puedes ver los productos.");
+                console.error("Error al iniciar sesión:", error);
+            }
+        }
+
+        async function cargarProductos() {
+            try {
+                const response = await fetch('http://localhost:3000/api/productos');
+                const productos = await response.json();
+
+                const contenedor = document.getElementById('productos');
+                contenedor.innerHTML = '';
+
+                productos.forEach(producto => {
+                    const div = document.createElement('div');
+                    div.className = 'product-card';
+                    div.innerHTML = 
+                        <img src="${producto.imagen}" alt="${producto.nombre}">
+                        <div class="product-name">${producto.nombre}</div>
+                        <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
+                    ;
+                    contenedor.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error al cargar productos:", error);
             }
         }
 

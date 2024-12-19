@@ -42,12 +42,6 @@
             color: #555;
             font-size: 16px;
         }
-        .hidden-button {
-            display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
         .login-form {
             display: none;
             max-width: 300px;
@@ -77,20 +71,11 @@
         .login-form button:hover {
             background-color: #0056b3;
         }
-        .hidden-area {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50px;
-            height: 50px;
-            background-color: rgba(0, 0, 0, 0); /* Invisible area */
-        }
     </style>
 </head>
 <body>
     <h1>CATÁLOGO DE VEHÍCULOS</h1>
-    <div class="hidden-area" onclick="mostrarBoton()"></div>
-    <button class="hidden-button" id="loginButton" onclick="mostrarLogin()">Iniciar Sesión</button>
+    <button onclick="mostrarLogin()">Iniciar Sesión</button>
     <div class="login-form" id="loginForm">
         <input type="text" id="username" placeholder="Usuario" />
         <input type="password" id="password" placeholder="Contraseña" />
@@ -99,10 +84,6 @@
     <div class="product-grid" id="productos"></div>
 
     <script>
-        function mostrarBoton() {
-            document.getElementById('loginButton').style.display = 'block';
-        }
-
         function mostrarLogin() {
             document.getElementById('loginForm').style.display = 'block';
         }
@@ -142,11 +123,11 @@
                 productos.forEach(producto => {
                     const div = document.createElement('div');
                     div.className = 'product-card';
-                    div.innerHTML = 
+                    div.innerHTML = `
                         <img src="${producto.imagen}" alt="${producto.nombre}">
                         <div class="product-name">${producto.nombre}</div>
                         <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
-                    ;
+                    `;
                     contenedor.appendChild(div);
                 });
             } catch (error) {

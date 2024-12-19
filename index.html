@@ -49,34 +49,34 @@
     <div class="product-grid" id="productos"></div>
 
     <script>
+        // Productos estáticos que se muestran aunque el servidor esté apagado
+        const productosEstáticos = [
+            { id: 1, nombre: "Coche de Carreras", stock: 10, imagen: "https://example.com/car1.jpg" },
+            { id: 2, nombre: "Coche Deportivo", stock: 5, imagen: "https://example.com/car2.jpg" },
+            { id: 3, nombre: "Camión de Carga", stock: 8, imagen: "https://example.com/car3.jpg" }
+        ];
+
         async function cargarProductos() {
-            try {
-                // Cambiar la URL local por la URL de Vercel
-                const response = await fetch('https://hotwheels2.vercel.app/api/productos');
-                const productos = await response.json();
+            const contenedor = document.getElementById('productos');
+            contenedor.innerHTML = '';
 
-                const contenedor = document.getElementById('productos');
-                contenedor.innerHTML = '';
-
-                productos.forEach(producto => {
-                    const div = document.createElement('div');
-                    div.className = 'product-card';
-                    div.innerHTML = `
-                        <img src="${producto.imagen}" alt="${producto.nombre}">
-                        <div class="product-name">${producto.nombre}</div>
-                        <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
-                        <div class="update-section">
-                            <input type="number" id="nuevoStock-${producto.id}" placeholder="Nuevo stock" />
-                            <button onclick="actualizarStock(${producto.id})">Actualizar</button>
-                        </div>
-                    `;
-                    contenedor.appendChild(div);
-                });
-            } catch (error) {
-                console.error("Error al cargar productos:", error);
-            }
+            productosEstáticos.forEach(producto => {
+                const div = document.createElement('div');
+                div.className = 'product-card';
+                div.innerHTML = `
+                    <img src="${producto.imagen}" alt="${producto.nombre}">
+                    <div class="product-name">${producto.nombre}</div>
+                    <div class="product-stock">Stock: <span id="stock-${producto.id}">${producto.stock}</span> unidades</div>
+                    <div class="update-section">
+                        <input type="number" id="nuevoStock-${producto.id}" placeholder="Nuevo stock" />
+                        <button onclick="actualizarStock(${producto.id})">Actualizar</button>
+                    </div>
+                `;
+                contenedor.appendChild(div);
+            });
         }
 
+        // Función para actualizar stock solo cuando el servidor esté activo
         async function actualizarStock(id) {
             const nuevoStock = document.getElementById(`nuevoStock-${id}`).value;
 
@@ -86,26 +86,27 @@
             }
 
             try {
-                // Cambiar la URL local por la URL de Vercel
-                const response = await fetch('https://hotwheels2.vercel.app/api/productos/actualizar', {
+                // Verificar si el servidor está en línea
+                const response = await fetch('https://tu-backend-en-vercel.vercel.app/api/productos/actualizar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, nuevoStock: parseInt(nuevoStock) })
                 });
 
-                const resultado = await response.json();
-
                 if (response.ok) {
+                    const resultado = await response.json();
                     document.getElementById(`stock-${id}`).innerText = resultado.producto.stock;
                     alert("Stock actualizado correctamente");
                 } else {
-                    alert(resultado.mensaje);
+                    alert("Error al actualizar stock, servidor no disponible.");
                 }
             } catch (error) {
-                console.error("Error al actualizar stock:", error);
+                console.error("Error al contactar el servidor:", error);
+                alert("Servidor no disponible. Stock no actualizado.");
             }
         }
 
+        // Cargar los productos cuando la página se carga
         window.onload = () => cargarProductos();
     </script>
 </body>

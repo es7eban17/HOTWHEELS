@@ -16,7 +16,7 @@ app.use(session({
 
 // Datos iniciales del catálogo
 let productos = [
-  { id: 1, nombre: "Precio:$6000", stock: 1, imagen: '<img src="https://es7eban17.github.io/HOTWHEELS/images/ALARM.jpeg" alt="ALARM">' },
+  { id: 1, nombre: "Precio:$6000", stock: 1, imagen: '<img src="https://es7eban17.github.io/HOTWHEELS/images/5 ALARM.jpeg" alt="ALARM">' },
   { id: 2, nombre: "Precio:$7000", stock: 1, imagen: "./WHEELS/22' FORD MAVERICK.jpeg" },
   { id: 3, nombre: "Precio:$7000", stock: 1, imagen: "./WHEELS/49' DRAG MERC.jpeg" },
   { id: 4, nombre: "Precio:$6000", stock: 1, imagen: "./WHEELS/67' LOTUS.jpeg" },
